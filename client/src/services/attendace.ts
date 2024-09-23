@@ -13,7 +13,7 @@ const api = createApi({
   endpoints: (builder) => ({
     getListAttendance: builder.query<AttendanceListResponse, void>({
       query: () => ({
-        url: '/attendance',
+        url: '/attendance/history',
       }),
       providesTags: ['Attendance'],
     }),

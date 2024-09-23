@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { useClockInMutation, useClockOutMutation } from '@/services/attendace'
-import { Staff } from '@/types/staff' // Pastikan untuk menyesuaikan path ini
 
-const ClockInOut: React.FC = () => {
+interface ClockInOutProps {
+  staffId: string // Tambahkan prop untuk staffId
+}
+
+const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [actionType, setActionType] = useState<'clockIn' | 'clockOut' | null>(null)
 
   const [clockIn, { isLoading: isLoadingClockIn }] = useClockInMutation()
   const [clockOut, { isLoading: isLoadingClockOut }] = useClockOutMutation()
-
-  const staffId = useSelector((state: Staff) => state.id)
-  console.log(staffId) // Tambahkan tipe di sini
 
   const handleOpenModal = (type: 'clockIn' | 'clockOut') => {
     setActionType(type)
@@ -26,16 +25,16 @@ const ClockInOut: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      const requestData = {
-        staffId,
+      const payload = {
+        data: {
+          attributes: { staffId },
+        },
       }
 
       if (actionType === 'clockIn') {
-        await clockIn(requestData).unwrap()
-        console.log('Clocked In')
+        await clockIn(payload).unwrap()
       } else if (actionType === 'clockOut') {
-        await clockOut(requestData).unwrap()
-        console.log('Clocked Out')
+        await clockOut(payload).unwrap() // Menggunakan payload untuk clockOut
       }
       handleCloseModal()
     } catch (error) {

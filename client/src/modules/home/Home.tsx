@@ -1,14 +1,26 @@
+import { getCookie } from 'cookies-next'
+import { jwtDecode } from 'jwt-decode'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import ClockInOut from '@/components/ClockInOut'
 import Language from '@/components/Language'
-import Logout from '@/components/Logout' // Import komponen Logout
+import Logout from '@/components/Logout'
+import { USER_ACCESS_TOKEN } from '@/config/token'
 import Blank from '@/layouts/Blank'
+
+// Definisikan tipe untuk struktur token
+interface DecodedToken {
+  id: string
+  type: string
+  iat: number
+  exp: number
+}
 
 const Home: React.FC = () => {
   const { t } = useTranslation(['common', 'home'])
   const [currentTime, setCurrentTime] = useState<string>('')
+  const [staffId, setStaffId] = useState<string | null>(null)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -18,6 +30,16 @@ const Home: React.FC = () => {
 
     return () => clearInterval(interval)
   }, [])
+
+  const token = getCookie(USER_ACCESS_TOKEN) as string | undefined
+
+  useEffect(() => {
+    if (token && typeof token === 'string') {
+      // Pastikan token adalah string
+      const decodedToken = jwtDecode<DecodedToken>(token)
+      setStaffId(decodedToken.id)
+    }
+  }, [token])
 
   return (
     <Blank title={t('home:title')}>
@@ -30,8 +52,8 @@ const Home: React.FC = () => {
 
           <div className='flex flex-col items-center'>
             <p className='mt-4 text-lg'>{`Current Time: ${currentTime}`}</p>
-            <ClockInOut /> {/* Render komponen ClockInOut */}
-            <Logout /> {/* Render komponen Logout */}
+            {staffId && <ClockInOut staffId={staffId} />} {/* Kirim staffId ke ClockInOut */}
+            <Logout />
           </div>
         </section>
       </main>

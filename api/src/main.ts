@@ -20,9 +20,14 @@ async function bootstrap(): Promise<NestExpressApplication> {
     new ExpressAdapter(),
     {
       logger: ['error', 'warn'],
-      cors: true,
+      cors: {
+        origin: 'http://localhost:3009', // Ganti dengan URL asal Anda
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        credentials: true, // Jika Anda menggunakan cookies
+      },
     },
   );
+
   app.setGlobalPrefix('api');
   app.use(helmet());
   app.enable('trust proxy');
