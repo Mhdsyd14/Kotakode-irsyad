@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { HYDRATE } from 'next-redux-wrapper'
 
-import { AttendanceListResponse, ClockInOutRequest } from '@/types/attendance'
+import { AttendanceListResponse, ClockRequest } from '@/types/attendance'
 import { apiBaseQuery } from '@/utils/api'
 
 const api = createApi({
@@ -17,7 +17,7 @@ const api = createApi({
       }),
       providesTags: ['Attendance'],
     }),
-    clockIn: builder.mutation<void, ClockInOutRequest>({
+    clockIn: builder.mutation<void, ClockRequest>({
       query: (data) => ({
         url: '/attendance/clock-in',
         method: 'POST',
@@ -25,7 +25,7 @@ const api = createApi({
       }),
       invalidatesTags: ['Attendance'],
     }),
-    clockOut: builder.mutation<void, ClockInOutRequest>({
+    clockOut: builder.mutation<void, ClockRequest>({
       query: (data) => ({
         url: '/attendance/clock-out',
         method: 'POST',

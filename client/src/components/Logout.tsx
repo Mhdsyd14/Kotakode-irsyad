@@ -25,7 +25,7 @@ const Logout: React.FC = () => {
   return (
     <button
       onClick={handleLogout}
-      className='mt-6 rounded bg-red-500 px-4 py-2 text-white'
+      className='mt-6 ml-6 rounded bg-red-500 px-4 py-2 text-white'
     >
       Logout
     </button>

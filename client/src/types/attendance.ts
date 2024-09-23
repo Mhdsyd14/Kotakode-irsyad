@@ -1,3 +1,5 @@
+import { BaseRequest, BaseResponse } from './common'
+
 export interface AttendanceListResponse {
   attendances: Attendance[]
 }
@@ -19,8 +21,8 @@ export interface RootState {
 
 export interface ClockInOutRequest {
   staffId: string // atau gunakan UUID sesuai dengan kebutuhan Anda
-  clockin?: string // saat clock in
-  clockout?: string // saat clock out
+  // clockin?: string // saat clock in
+  // clockout?: string // saat clock out
 }
 
 // Contoh tipe Attendance (jika diperlukan)
@@ -34,3 +36,5 @@ export interface Attendance {
     // Tambahkan field lain yang diperlukan
   }
 }
+
+export type ClockRequest = BaseRequest<ClockInOutRequest>

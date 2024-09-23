@@ -25,17 +25,29 @@ const Home: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date()
-      setCurrentTime(now.toLocaleTimeString())
+      setCurrentTime(formatDate(now))
     }, 1000)
 
     return () => clearInterval(interval)
   }, [])
 
+  const formatDate = (date: Date) => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    }
+    return date.toLocaleString(undefined, options)
+  }
+
   const token = getCookie(USER_ACCESS_TOKEN) as string | undefined
 
   useEffect(() => {
     if (token && typeof token === 'string') {
-      // Pastikan token adalah string
       const decodedToken = jwtDecode<DecodedToken>(token)
       setStaffId(decodedToken.id)
     }
@@ -53,8 +65,8 @@ const Home: React.FC = () => {
           <div className='flex flex-col items-center'>
             <p className='mt-4 text-lg'>{`Current Time: ${currentTime}`}</p>
             {staffId && <ClockInOut staffId={staffId} />} {/* Kirim staffId ke ClockInOut */}
-            <Logout />
           </div>
+          <Logout />
         </section>
       </main>
     </Blank>
