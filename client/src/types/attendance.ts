@@ -1,4 +1,4 @@
-import { BaseRequest, BaseResponse } from './common'
+import { BaseRequest } from './common'
 
 export interface AttendanceListResponse {
   attendances: Attendance[]
