@@ -19,8 +19,8 @@ export interface updateStaff {
 }
 
 export type StaffBrowseRequest = {
-  page: number
-  pageSize: number
+  page?: number
+  pageSize?: number
 }
 
 export type StaffUpdateRequest = BaseRequest<updateStaff>
