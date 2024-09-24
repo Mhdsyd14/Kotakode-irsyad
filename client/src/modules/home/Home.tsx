@@ -9,7 +9,7 @@ import Loading from '@/components/Loading'
 import Logout from '@/components/Logout'
 import { USER_ACCESS_TOKEN } from '@/config/token'
 import Blank from '@/layouts/Blank'
-import { useGetDetailStaffQuery } from '@/services/staffs' // Import hook
+import { useGetDetailStaffQuery } from '@/services/staffs'
 import { formatDate } from '@/utils/formatdate'
 
 // Definisikan tipe untuk struktur token yang didekode
@@ -49,33 +49,38 @@ const Home: React.FC = () => {
     isLoading,
     isError,
   } = useGetDetailStaffQuery(staffId as string, {
-    skip: !staffId, // Lewati query jika staffId tidak ada
+    skip: !staffId,
   })
 
   if (isLoading) {
-    return <Loading isRouteChanging={false} /> // Tampilkan status loading
+    return <Loading isRouteChanging={false} />
   }
 
   if (isError) {
-    return <div>Error fetching staff details.</div> // Tampilkan status error
+    return <div className='text-red-500'>Error fetching staff details.</div>
   }
 
   return (
     <Blank title={t('home:title')}>
-      <main className='min-h-screen bg-gray-100'>
-        <section className='mx-auto min-h-screen max-w-screen-sm bg-white py-10'>
-          <div className='flex flex-row items-center justify-between px-6 text-center'>
-            <h1 className='font-primary text-2xl font-bold md:text-4xl'>{t('common:titles.home')}</h1>
+      <main className='min-h-screen bg-gray-100 py-8'>
+        <section className='mx-auto max-w-screen-lg rounded-lg bg-white py-10 px-6 shadow-lg'>
+          <div className='flex flex-row items-center justify-between'>
+            <h1 className='text-3xl font-bold text-gray-800'>{t('common:titles.home')}</h1>
             <Language />
           </div>
 
-          <div className='flex flex-col items-center'>
-            <p className='mt-4 text-lg'>{`Current Time: ${currentTime}`}</p>
-            {staffId && <ClockInOut staffId={staffId} />} {/* Kirim staffId ke ClockInOut */}
+          <div className='mt-6 flex flex-col items-center'>
+            {/* Tampilan Jam yang Diperbarui */}
+            <div className='rounded-lg border border-blue-300 bg-blue-100 p-4 shadow-md'>
+              <p className='text-2xl font-bold text-blue-800'>{`Current Time: ${currentTime}`}</p>
+            </div>
+
+            {staffId && <ClockInOut staffId={staffId} />}
+
             {/* Tampilkan detail staf */}
             {staffDetails?.data && staffDetails.data.length > 0 && (
-              <div className='mt-6'>
-                {/* Ambil data staf dari array data */}
+              <div className='mt-6 rounded-lg border border-gray-200 bg-gray-50 p-4'>
+                <h2 className='text-xl font-semibold text-gray-800'>Detail Staf</h2>
                 <div className='mt-2'>
                   <p>
                     <strong>Nama Lengkap:</strong> {staffDetails.data[0].attributes.fullName}
