@@ -11,6 +11,7 @@ import { USER_ACCESS_TOKEN } from '@/config/token'
 import Blank from '@/layouts/Blank'
 import { useGetDetailStaffQuery } from '@/services/staffs'
 import { formatDate } from '@/utils/formatdate'
+import UpdateStaffForm from '@/components/UpdateStaffForm'
 
 // Definisikan tipe untuk struktur token yang didekode
 interface DecodedToken {
@@ -89,6 +90,14 @@ const Home: React.FC = () => {
                     <strong>Email:</strong> {staffDetails.data[0].attributes.email}
                   </p>
                 </div>
+
+                {/* Button untuk membuka Update Modal */}
+                <UpdateStaffForm
+                  staffId={staffDetails.data[0].attributes.id ?? ''}
+                  firstname={staffDetails.data[0].attributes.firstName ?? ''}
+                  lastname={staffDetails.data[0].attributes.lastName ?? ''}
+                  email={staffDetails.data[0].attributes.email ?? ''}
+                />
               </div>
             )}
           </div>

@@ -1,8 +1,8 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { HYDRATE } from 'next-redux-wrapper'
 
-import { StaffBrowseRequest, StaffBrowseResponse, StaffDetailResponse } from '@/types/staff'
-import { apiBaseQuery, mockApiBaseQuery } from '@/utils/api'
+import { StaffBrowseRequest, StaffBrowseResponse, StaffDetailResponse, StaffUpdateRequest } from '@/types/staff'
+import { apiBaseQuery } from '@/utils/api'
 
 const api = createApi({
   reducerPath: 'staff',
@@ -24,6 +24,14 @@ const api = createApi({
       }),
       providesTags: ['Staff'],
     }),
+    updateStaff: builder.mutation<StaffUpdateRequest, { id: string; data: any }>({
+      query: ({ id, data }) => ({
+        url: `/staffs/${id}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['Staff'],
+    }),
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -33,6 +41,6 @@ const api = createApi({
 })
 
 // Export hooks for usage in functional components
-export const { useGetListStaffsQuery, useGetDetailStaffQuery, util: exampleUtil } = api
+export const { useGetListStaffsQuery, useUpdateStaffMutation, useGetDetailStaffQuery, util: exampleUtil } = api
 
 export default api
