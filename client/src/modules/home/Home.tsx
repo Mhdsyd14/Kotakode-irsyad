@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import ClockInOut from '@/components/ClockInOut'
 import Language from '@/components/Language'
+import Loading from '@/components/Loading'
 import Logout from '@/components/Logout'
 import { USER_ACCESS_TOKEN } from '@/config/token'
 import Blank from '@/layouts/Blank'
@@ -52,7 +53,7 @@ const Home: React.FC = () => {
   })
 
   if (isLoading) {
-    return <div>Loading...</div> // Tampilkan status loading
+    return <Loading isRouteChanging={false} /> // Tampilkan status loading
   }
 
   if (isError) {
