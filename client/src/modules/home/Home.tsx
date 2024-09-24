@@ -8,8 +8,9 @@ import Language from '@/components/Language'
 import Logout from '@/components/Logout'
 import { USER_ACCESS_TOKEN } from '@/config/token'
 import Blank from '@/layouts/Blank'
+import { useGetDetailStaffQuery } from '@/services/staffs' // Import hook
 
-// Definisikan tipe untuk struktur token
+// Definisikan tipe untuk struktur token yang didekode
 interface DecodedToken {
   id: string
   type: string
@@ -53,6 +54,23 @@ const Home: React.FC = () => {
     }
   }, [token])
 
+  // Ambil detail staf menggunakan staffId
+  const {
+    data: staffDetails,
+    isLoading,
+    isError,
+  } = useGetDetailStaffQuery(staffId as string, {
+    skip: !staffId, // Lewati query jika staffId tidak ada
+  })
+
+  if (isLoading) {
+    return <div>Loading...</div> // Tampilkan status loading
+  }
+
+  if (isError) {
+    return <div>Error fetching staff details.</div> // Tampilkan status error
+  }
+
   return (
     <Blank title={t('home:title')}>
       <main className='min-h-screen bg-gray-100'>
@@ -65,6 +83,20 @@ const Home: React.FC = () => {
           <div className='flex flex-col items-center'>
             <p className='mt-4 text-lg'>{`Current Time: ${currentTime}`}</p>
             {staffId && <ClockInOut staffId={staffId} />} {/* Kirim staffId ke ClockInOut */}
+            {/* Tampilkan detail staf */}
+            {staffDetails?.data && staffDetails.data.length > 0 && (
+              <div className='mt-6'>
+                {/* Ambil data staf dari array data */}
+                <div className='mt-2'>
+                  <p>
+                    <strong>Nama Lengkap:</strong> {staffDetails.data[0].attributes.fullName}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {staffDetails.data[0].attributes.email}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
           <Logout />
         </section>
