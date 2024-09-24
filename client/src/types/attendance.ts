@@ -1,6 +1,7 @@
 import { BaseRequest } from './common'
 
 export interface AttendanceListResponse {
+  data: any
   attendances: Attendance[]
 }
 

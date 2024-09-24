@@ -11,7 +11,8 @@ const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
   const [actionType, setActionType] = useState<'clockIn' | 'clockOut' | null>(null)
   const [currentTime, setCurrentTime] = useState<string | null>(null)
 
-  const { data: attendanceData } = useGetListAttendanceQuery()
+  // Panggil useGetListAttendanceQuery dengan staffId sebagai parameter
+  const { data: attendanceData, isLoading: isLoadingAttendance } = useGetListAttendanceQuery(staffId)
   const [clockIn, { isLoading: isLoadingClockIn }] = useClockInMutation()
   const [clockOut, { isLoading: isLoadingClockOut }] = useClockOutMutation()
 
@@ -42,12 +43,13 @@ const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
       }
       handleCloseModal()
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Error during clock in/out:', error)
     }
   }
 
-  const hasClockedIn = attendanceData?.data.some((att) => att.attributes.clockin)
-  const hasClockedOut = attendanceData?.data.some((att) => att.attributes.clockout)
+  const hasClockedIn = attendanceData?.data.some((att: { attributes: { clockin: any } }) => att.attributes.clockin)
+  const hasClockedOut = attendanceData?.data.some((att: { attributes: { clockout: any } }) => att.attributes.clockout)
 
   const formatDate = (dateString: string) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -82,6 +84,7 @@ const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
       )}
 
       {isModalOpen && (
+        // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
         <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
           <div className='rounded bg-white p-6 shadow-lg'>
             <h2 className='mb-4 text-lg font-bold'>
@@ -111,14 +114,18 @@ const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
       )}
 
       <div className='mt-6'>
-        {attendanceData && attendanceData.data.length > 0 ? (
+        {isLoadingAttendance ? (
+          <p>Loading attendance data...</p>
+        ) : attendanceData && attendanceData.data.length > 0 ? (
           <ul>
-            {attendanceData.data.map((attendance) => (
-              <li key={attendance.id}>
-                <p>Clock In: {formatDate(attendance.attributes.clockin)}</p>
-                <p>Clock Out: {formatDate(attendance.attributes.clockout)}</p>
-              </li>
-            ))}
+            {attendanceData.data.map(
+              (attendance: { id: React.Key | null | undefined; attributes: { clockin: string; clockout: string } }) => (
+                <li key={attendance.id}>
+                  <p>Clock In: {formatDate(attendance.attributes.clockin)}</p>
+                  <p>Clock Out: {formatDate(attendance.attributes.clockout)}</p>
+                </li>
+              )
+            )}
           </ul>
         ) : (
           <p>No attendance data available.</p>

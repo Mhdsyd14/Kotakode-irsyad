@@ -11,9 +11,10 @@ const api = createApi({
   refetchOnMountOrArgChange: true,
   keepUnusedDataFor: 259200, // 3 days
   endpoints: (builder) => ({
-    getListAttendance: builder.query<AttendanceListResponse, void>({
-      query: () => ({
-        url: '/attendance/history',
+    getListAttendance: builder.query<AttendanceListResponse, string>({
+      query: (staffId) => ({
+        url: `/attendance/history/${staffId}`,
+        method: 'GET',
       }),
       providesTags: ['Attendance'],
     }),

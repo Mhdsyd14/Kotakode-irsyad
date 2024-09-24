@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param } from '@nestjs/common';
 import { AttendanceService } from './attendance.service';
 import { ClockInDto, ClockOutDto } from './dto/attendance.dto';
 
@@ -16,8 +16,8 @@ export class AttendanceController {
     return this.attendanceService.clockOut(clockOutDto.staffId);
   }
 
-  @Get('history')
-  async getAttendanceHistory(@Body() body: { staffId: string }) {
-    return this.attendanceService.getAttendanceHistory(body.staffId);
+  @Get('history/:staffId')
+  async getAttendanceHistory(@Param('staffId') staffId: string) {
+    return this.attendanceService.getAttendanceHistory(staffId);
   }
 }
