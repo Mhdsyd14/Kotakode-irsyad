@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 
 import { useClockInMutation, useClockOutMutation, useGetListAttendanceQuery } from '@/services/attendace'
+import { formatDate } from '@/utils/formatdate'
 
 interface ClockInOutProps {
   staffId: string
@@ -50,19 +51,6 @@ const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
 
   const hasClockedIn = attendanceData?.data.some((att: { attributes: { clockin: any } }) => att.attributes.clockin)
   const hasClockedOut = attendanceData?.data.some((att: { attributes: { clockout: any } }) => att.attributes.clockout)
-
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }
-    return new Date(dateString).toLocaleString(undefined, options)
-  }
 
   return (
     <div className='mt-6 flex flex-col items-center'>
@@ -122,7 +110,10 @@ const ClockInOut: React.FC<ClockInOutProps> = ({ staffId }) => {
               (attendance: { id: React.Key | null | undefined; attributes: { clockin: string; clockout: string } }) => (
                 <li key={attendance.id}>
                   <p>Clock In: {formatDate(attendance.attributes.clockin)}</p>
-                  <p>Clock Out: {formatDate(attendance.attributes.clockout)}</p>
+                  <p>
+                    Clock Out:{' '}
+                    {attendance.attributes.clockout ? formatDate(attendance.attributes.clockout) : 'Silahkan Clock Out'}
+                  </p>
                 </li>
               )
             )}

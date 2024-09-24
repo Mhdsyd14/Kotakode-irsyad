@@ -9,6 +9,7 @@ import Logout from '@/components/Logout'
 import { USER_ACCESS_TOKEN } from '@/config/token'
 import Blank from '@/layouts/Blank'
 import { useGetDetailStaffQuery } from '@/services/staffs' // Import hook
+import { formatDate } from '@/utils/formatdate'
 
 // Definisikan tipe untuk struktur token yang didekode
 interface DecodedToken {
@@ -31,19 +32,6 @@ const Home: React.FC = () => {
 
     return () => clearInterval(interval)
   }, [])
-
-  const formatDate = (date: Date) => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    }
-    return date.toLocaleString(undefined, options)
-  }
 
   const token = getCookie(USER_ACCESS_TOKEN) as string | undefined
 
